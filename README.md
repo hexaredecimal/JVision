@@ -1,4 +1,11 @@
+<div align="center">
+  
 # JVision 
+
+![example workflow](https://github.com/hexaredecimal/JVision/actions/workflows/ant.yml/badge.svg)
+
+</div>
+
 >> In an alternate universe the world still lives in the 90s. GUIs are not mainstream and TUI is what does it for the consumers.
 >> Java is still considered superior and it does't have a bad reputation. Microsoft and apple ate dust and open source is KING.
 >> In that universe JVision is the default Window manager for most computers. What could go wrong!
