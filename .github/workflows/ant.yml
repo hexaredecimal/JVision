@@ -16,12 +16,6 @@ jobs:
         distribution: 'adopt'
         java-version: '11'
 
-    - name: Setup NetBeans
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'plain'
-        java-version: '11'
-
     - name: Setup JAR Dependency
       run: cp jexer-1.6.0.jar lib/
 
