@@ -1,1 +1,5 @@
 *.class
+dist/
+build/
+nbproject/private/profiler/ 
+.gitignore
