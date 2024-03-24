@@ -35,8 +35,17 @@ public class TurboEd extends TEditorWindow {
 	}
 
 	private void addMenus() {
+		menus.add(getAppMenu());
 		menus.add(parent.addFileMenu());
 		menus.add(parent.addEditMenu());
+	}
+
+	private TMenu getAppMenu() {
+		TMenu app = parent.addMenu("&Turbo");
+		app.addItem(0x25500A, "A&bout");
+		app.addSeparator();
+		app.addItem(0x33111, "Exit");
+		return app;
 	}
 
 	@Override

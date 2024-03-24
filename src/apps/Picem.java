@@ -32,8 +32,8 @@ public class Picem extends TImageWindow {
 	}
 
 	private void addMenus() {
+		menus.add(getAppMenu());
 		menus.add(getImagesMenu());
-		menus.add(parent.addHelpMenu());
 	}
 
 	private TMenu getImagesMenu() {
@@ -46,7 +46,15 @@ public class Picem extends TImageWindow {
 		menu.addItem(5000 + 2, "E&xit");
 		return menu;
 	}
-
+	
+	private TMenu getAppMenu() {
+		TMenu app = parent.addMenu("Pi&cem");
+		app.addItem(0x25500A, "A&bout");
+		app.addSeparator();
+		app.addItem(0x33111, "Exit");
+		return app;
+	}
+	
 	@Override
 	public void onFocus() {
 		System.out.println("apps.Picem.onFocus()");

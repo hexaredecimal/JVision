@@ -41,21 +41,24 @@ public class Clock extends TWindow {
 
 
 	private void addMenus() {
+		menus.add(getAppMenu());
 		menus.add(getDisplayMenu());
-		menus.add(getHelpMenu());
 	}
 
-	private TMenu getHelpMenu() {
-		TMenu help = parent.addMenu("H&elp");
-		help.addItem(0x25500A, "A&bout");
-		return help;
-	}
 
 	private TMenu getDisplayMenu() {
 		TMenu display = parent.addMenu("D&ispay");
 		display.addItem(0x0A111, "&Full D&ate");
 		display.addItem(0x0A0B0, "S&how AM");
 		return display; 
+	}
+	
+	private TMenu getAppMenu() {
+		TMenu app = parent.addMenu("Cloc&k");
+		app.addItem(0x25500A, "A&bout");
+		app.addSeparator();
+		app.addItem(0x33111, "Exit");
+		return app;
 	}
 	
 	@Override

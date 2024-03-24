@@ -47,20 +47,23 @@ public class Konsole extends TWindow {
 	}
 
 	private void addMenus() {
+		menus.add(getAppMenu());
 		menus.add(getConfigMenu());
-		menus.add(getHelpMenu());
 	}
 
-	private TMenu getHelpMenu() {
-		TMenu help = parent.addMenu("H&elp");
-		help.addItem(0x25500A, "A&bout");
-		return help;
-	}
 
 	private TMenu getConfigMenu() {
 		TMenu display = parent.addMenu("C&onfigure");
 		display.addItem(0x0A111, "Op&acity");
 		return display; 
+	}
+
+	private TMenu getAppMenu() {
+		TMenu app = parent.addMenu("K&onsole");
+		app.addItem(0x25500A, "A&bout");
+		app.addSeparator();
+		app.addItem(0x33111, "Exit");
+		return app;
 	}
 	
 	@Override

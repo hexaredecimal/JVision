@@ -14,7 +14,6 @@ import java.util.ResourceBundle;
 import jexer.TApplication;
 import jexer.TDesktop;
 import jexer.TExceptionDialog;
-import jexer.TLabel;
 import jexer.TTerminalWidget;
 import jexer.TSplitPane;
 import jexer.TWidget;
@@ -51,7 +50,7 @@ public class JVision extends TApplication {
 
 		super(BackendType.SWING, WIDTH, HEIGHT, FONT_SIZE);
 
-		getTheme().setFemme();
+		//getTheme().setFemme();
 		System.setProperty("jexer.TWindow.borderStyleForeground", "round");
 		System.setProperty("jexer.TWindow.borderStyleModal", "round");
 		System.setProperty("jexer.TWindow.borderStyleMoving", "round");
