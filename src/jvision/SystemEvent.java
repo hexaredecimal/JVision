@@ -8,13 +8,19 @@ package jvision;
  *
  * @author hexaredecimal
  */
-enum SystemEvent {
+public enum SystemEvent {
 	OpenTerminal(2010),
 	OpenAboutDialog(2011),
 	OpenSettings(2012),
 	OpenTurboEd(2012),
-	OpenPicem(2013);
+	OpenPicem(2013),
+	OpenClockem(2014),
 
+	
+	// Menu events
+	PicemChooseFile(3000),
+	ClockemAbout(3020);
+	
 	private int id;
 
 	SystemEvent(int id) {
