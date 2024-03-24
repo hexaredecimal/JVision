@@ -1,4 +1,4 @@
-name: Java Ant Build
+name: Build NetBeans Project
 
 on: [push, pull_request]
 
@@ -16,14 +16,16 @@ jobs:
         distribution: 'adopt'
         java-version: '11'
 
-    - name: Setup Ant
-      run: sudo apt-get install ant
+    - name: Setup NetBeans
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'plain'
+        java-version: '11'
 
-    - name: Compile project
-      run: ant compile
-
-    - name: Add JAR library
+    - name: Setup JAR Dependency
       run: cp jexer-1.6.0.jar lib/
 
-    - name: Create JAR with library
-      run: ant -lib lib/jexer-1.6.0.jar jar
+    - name: Build NetBeans Project
+      run: |
+        sudo apt-get install ant
+        ant clean jar
