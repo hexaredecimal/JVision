@@ -1,5 +1,9 @@
 package jvision;
 
+
+import apps.Clock;
+import apps.DeskTopWindow;
+import apps.Konsole;
 import apps.Picem;
 import apps.TurboEd;
 import java.io.File;
@@ -10,7 +14,7 @@ import java.util.ResourceBundle;
 import jexer.TApplication;
 import jexer.TDesktop;
 import jexer.TExceptionDialog;
-import jexer.TImageWindow;
+import jexer.TLabel;
 import jexer.TTerminalWidget;
 import jexer.TSplitPane;
 import jexer.TWidget;
@@ -18,41 +22,21 @@ import jexer.event.TMenuEvent;
 import jexer.menu.TMenu;
 import jexer.menu.TSubMenu;
 
-/**
- * Implements a simple tiling window manager. A terminal widget is added to the
- * desktop, which can be split horizontally or vertically. A close action is
- * provided to each window to remove the split when its shell exits.
- *
- * This example shows what can be done with minimal changes to stock Jexer
- * widgets.
- */
 public class JVision extends TApplication {
-
 	private static final ResourceBundle i18n = ResourceBundle.getBundle(TApplication.class.getName());
-	/**
-	 * Handle to the root widget.
-	 */
 	final static int WIDTH = 200;
 	final static int HEIGHT = 80;
 	final static int FONT_SIZE = 12;
 
-	/**
-	 * Main entry point.
-	 */
 	public static void main(String[] args) throws Exception {
-		// For this application, we must use ptypipe so that the terminal
-		// shells can be aware of their size.
-		// System.setProperty("jexer.TTerminal.ptypipe", "true");
-
-		// Let's also suppress the status line.
+		System.setProperty("jexer.TTerminal.ptypipe", "true");
 		System.setProperty("jexer.hideStatusBar", "true");
 
 		final JVision jtwm = new JVision();
 		(new Thread(jtwm)).start();
 
-		jtwm.invokeLater(new Runnable() {
-			public void run() {
-			}
+		jtwm.invokeLater(() -> {
+			System.out.println("jvision.JVision.main()");
 		});
 	}
 
@@ -66,18 +50,19 @@ public class JVision extends TApplication {
 	public JVision() throws Exception {
 
 		super(BackendType.SWING, WIDTH, HEIGHT, FONT_SIZE);
+
+		getTheme().setFemme();
+		System.setProperty("jexer.TWindow.borderStyleForeground", "round");
+		System.setProperty("jexer.TWindow.borderStyleModal", "round");
+		System.setProperty("jexer.TWindow.borderStyleMoving", "round");
+		System.setProperty("jexer.TWindow.borderStyleInactive", "round");
+
 		// The stock tool menu has items for redrawing the screen, opening
 		// images, and (when using the Swing backend) setting the font.
 		// addToolMenu();
 		URL wall_paper = this.getClass().getResource("/wallpapers/default.jpg");
-		TImageWindow win = new TImageWindow(
-			this, 
-			new File(wall_paper.getPath()), 
-			-1, 
-			-1, 
-			WIDTH + 2, 
-			HEIGHT + 1
-		);
+		DeskTopWindow win = new DeskTopWindow(this, new File(wall_paper.getPath()), WIDTH, HEIGHT);
+		
 		win.setActive(false);
 		win.setEnabled(false);
 		win.setTitle("");
@@ -88,9 +73,10 @@ public class JVision extends TApplication {
 
 		// Stock commands: a new shell with resizable window, and exit
 		// program.
-		tileMenu.addItem(TMenu.MID_SHELL, "T&erminal");
+		tileMenu.addItem(SystemEvent.OpenTerminal.getId(), "T&erminal");
 		tileMenu.addItem(SystemEvent.OpenPicem.getId(), "Pic&em");
 		tileMenu.addItem(SystemEvent.OpenTurboEd.getId(), "Turbo&Ed");
+		tileMenu.addItem(SystemEvent.OpenClockem.getId(), "Clock&em");
 
 		tileMenu.addSeparator();
 		TSubMenu sub = tileMenu.addSubMenu("Se&ttings");
@@ -103,6 +89,7 @@ public class JVision extends TApplication {
 
 		root.add(tileMenu);
 		root.add(windowMenu);
+
 		// TTerminalWidget can request the text-block mouse pointer be
 		// suppressed, but the default TDesktop will ignore it.  Let's set a
 		// new TDesktop to pass that mouse pointer visibility option to
@@ -125,11 +112,19 @@ public class JVision extends TApplication {
 	 */
 	@Override
 	protected boolean onMenu(TMenuEvent event) {
-		TWidget active = getDesktop().getActiveChild();
+		TWidget active = this.getActiveWindow();
 		TSplitPane split = null;
 
+		// TODO: Fix this mess of code. Load classes on runtime, maybe?
+		//	 Definetely should try
+
 		int event_id = event.getId();
-		if (event_id == SystemEvent.OpenAboutDialog.getId()) {
+		
+		if (event_id == SystemEvent.OpenTerminal.getId()) {
+			Konsole konsole = new Konsole(this, "Konsole", 80, 40);
+		}else if (event_id == SystemEvent.OpenClockem.getId()) {
+			Clock clock = new Clock(this,"Clockem", 20, 5);
+		}else if (event_id == SystemEvent.OpenAboutDialog.getId()) {
 			this.messageBox("About", "TurboVision OS v0.1");
 		} else if (event_id == SystemEvent.OpenTurboEd.getId()) {
 			TurboEd ed = new TurboEd(this);
@@ -137,7 +132,23 @@ public class JVision extends TApplication {
 		} else if (event_id == SystemEvent.OpenPicem.getId()) {
 			String filename = Picem.readFile(this);
 			try {
+				System.out.println("jvision.JVision.onMenu(): " + Helpers.extractPath(filename));
 				Picem picem = new Picem(this, new File(filename));
+				this.activateWindow(picem);
+			} catch (Exception ex) {
+				TExceptionDialog e = new TExceptionDialog(this, ex);
+			}
+		} else if (event_id == SystemEvent.PicemChooseFile.getId()) {
+			String filename = Picem.readFile(this);
+			Picem picem = (Picem) active;
+			int x = picem.getX();
+			int y = picem.getY();
+			picem.close();
+			try {
+				File file = new File(filename);
+				picem = new Picem(this, new File(filename));
+				picem.setX(x);
+				picem.setY(y);
 			} catch (IOException ex) {
 				TExceptionDialog e = new TExceptionDialog(this, ex);
 			}
