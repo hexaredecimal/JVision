@@ -1,22 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package apps;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jexer.TApplication;
 import jexer.TExceptionDialog;
 import jexer.TFileOpenBox;
 import jexer.TImageWindow;
 import jexer.menu.TMenu;
 import jvision.Helpers;
-
+import jvision.SystemEvent;
 /**
  *
  * @author hexaredecimal
@@ -26,6 +20,7 @@ public class Picem extends TImageWindow {
 	private TApplication parent;
 	private ArrayList<TMenu> menus;
 
+	private String workingDir;
 	public Picem(TApplication parent, File file) throws IOException {
 		super(parent, file);
 		this.parent = parent;
@@ -33,17 +28,22 @@ public class Picem extends TImageWindow {
 		addMenus();
 		setWidth(100);
 		setHeight(50);
+		workingDir = Helpers.extractPath(file.getAbsolutePath());
 	}
 
 	private void addMenus() {
-		menus.add(getImages());
+		menus.add(getImagesMenu());
 		menus.add(parent.addHelpMenu());
 	}
 
-	private TMenu getImages() {
+	private TMenu getImagesMenu() {
 		TMenu menu = parent.addMenu("I&mages");
+		menu.addItem(SystemEvent.PicemChooseFile.getId(), "Op&en"); 
+		menu.addSeparator();
 		menu.addItem(5000, "N&ext");
 		menu.addItem(5000 + 1, "P&rev");
+		menu.addSeparator();
+		menu.addItem(5000 + 2, "E&xit");
 		return menu;
 	}
 
