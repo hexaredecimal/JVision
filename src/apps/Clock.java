@@ -74,4 +74,10 @@ public class Clock extends TWindow {
 			Helpers.removeMenus(parent, menus);
 		}
 	}
+
+	@Override 
+	public void onClose() {
+		this.onUnfocus();
+		super.onClose();
+	}
 }

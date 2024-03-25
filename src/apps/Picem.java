@@ -71,6 +71,13 @@ public class Picem extends TImageWindow {
 		}
 	}
 
+	@Override 
+	public void onClose() {
+		this.onUnfocus();
+		super.onClose();
+	}
+
+
 	public static String readFile(TApplication parent) {
 		List<String> filters = new ArrayList<String>();
 		filters.add("^.*\\.[Jj][Pp][Gg]$");

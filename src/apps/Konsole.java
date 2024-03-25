@@ -82,4 +82,9 @@ public class Konsole extends TWindow {
 		}
 	}
 	
+	@Override 
+	public void onClose() {
+		this.onUnfocus();
+		super.onClose();
+	}
 }

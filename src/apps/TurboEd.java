@@ -4,22 +4,19 @@
  */
 package apps;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import jexer.TApplication;
-import jexer.TEditorWindow;
-import jexer.TWindow;
+import jexer.TEditorWidget;
 import jexer.menu.TMenu;
 import jvision.Helpers;
 import jvision.SystemEvent;
+import libvision.TVEditorWindow;
 
 /**
  *
  * @author hexaredecimal
  */
-public class TurboEd extends TEditorWindow {
+public class TurboEd extends TVEditorWindow {
 
 	private static final int WIDTH = 100; 
 	private static final int HEIGHT = 50; 
@@ -34,12 +31,14 @@ public class TurboEd extends TEditorWindow {
 		addMenus();
 		setWidth(WIDTH);
 		setHeight(HEIGHT);
+		TEditorWidget editor = getEditor(); 
+		editor.setText("Hello, world");
 	}
 
 	private void addMenus() {
-		menus.add(getAppMenu());
-		menus.add(parent.addFileMenu());
-		menus.add(parent.addEditMenu());
+		Helpers.addNonExist(menus, getAppMenu());
+		Helpers.addNonExist(menus, parent.addFileMenu());
+		Helpers.addNonExist(menus, parent.addEditMenu());
 	}
 
 	private TMenu getAppMenu() {
@@ -60,5 +59,11 @@ public class TurboEd extends TEditorWindow {
 	public void onUnfocus() {
 		if (parent != null)
 			Helpers.removeMenus(parent, menus);
+	}
+
+	@Override 
+	public void onClose() {
+		this.onUnfocus();
+		super.onClose();
 	}
 }
