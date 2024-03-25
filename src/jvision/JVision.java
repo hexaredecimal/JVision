@@ -17,6 +17,7 @@ import jexer.TExceptionDialog;
 import jexer.TTerminalWidget;
 import jexer.TSplitPane;
 import jexer.TWidget;
+import jexer.TWindow;
 import jexer.event.TMenuEvent;
 import jexer.menu.TMenu;
 import jexer.menu.TSubMenu;
@@ -27,6 +28,7 @@ public class JVision extends TApplication {
 	final static int HEIGHT = 80;
 	final static int FONT_SIZE = 12;
 
+	private final ArrayList<TMenu> root ;
 	public static void main(String[] args) throws Exception {
 		System.setProperty("jexer.TTerminal.ptypipe", "true");
 		System.setProperty("jexer.hideStatusBar", "true");
@@ -39,7 +41,6 @@ public class JVision extends TApplication {
 		});
 	}
 
-	private ArrayList<TMenu> root = new ArrayList<>();
 
 	/**
 	 * Public constructor chooses the ECMA-48 / Xterm backend.
@@ -50,6 +51,7 @@ public class JVision extends TApplication {
 
 		super(BackendType.SWING, WIDTH, HEIGHT, FONT_SIZE);
 
+		root = new ArrayList<>();
 		//getTheme().setFemme();
 		System.setProperty("jexer.TWindow.borderStyleForeground", "round");
 		System.setProperty("jexer.TWindow.borderStyleModal", "round");
@@ -111,7 +113,7 @@ public class JVision extends TApplication {
 	 */
 	@Override
 	protected boolean onMenu(TMenuEvent event) {
-		TWidget active = this.getActiveWindow();
+		TWindow active = this.getActiveWindow();
 		TSplitPane split = null;
 
 		// TODO: Fix this mess of code. Load classes on runtime, maybe?
@@ -119,10 +121,12 @@ public class JVision extends TApplication {
 
 		int event_id = event.getId();
 		
-		if (event_id == SystemEvent.OpenTerminal.getId()) {
-			Konsole konsole = new Konsole(this, "Konsole", 80, 40);
+		if (event_id == SystemEvent.CloseApp.getId()) {
+			active.close();
+		} else if (event_id == SystemEvent.OpenTerminal.getId()) {
+			new Konsole(this, "Konsole", 80, 40);
 		}else if (event_id == SystemEvent.OpenClockem.getId()) {
-			Clock clock = new Clock(this,"Clockem", 20, 5);
+			new Clock(this,"Clockem", 20, 5);
 		}else if (event_id == SystemEvent.OpenAboutDialog.getId()) {
 			this.messageBox("About", "TurboVision OS v0.1");
 		} else if (event_id == SystemEvent.OpenTurboEd.getId()) {

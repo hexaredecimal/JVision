@@ -19,7 +19,8 @@ public enum SystemEvent {
 	
 	// Menu events
 	PicemChooseFile(3000),
-	ClockemAbout(3020);
+	ClockemAbout(3020), 
+	CloseApp(5000);
 	
 	private int id;
 
