@@ -6,6 +6,7 @@ package jvision;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import jexer.TApplication;
 import jexer.menu.TMenu;
 
@@ -63,4 +64,8 @@ public class Helpers {
 		return time;
 	}
 
+	public static void addNonExist(ArrayList<TMenu> t, TMenu a) {
+		if (!t.contains(a))
+			t.add(a);
+	}
 }
