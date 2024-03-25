@@ -11,9 +11,9 @@
 >> In that universe JVision is the default Window manager for most computers. What could go wrong!
 
 # Dependencies
->> #### ![Jexer](https://gitlab.com/AutumnMeowMeow/jexer)
+>> #### [Jexer](https://gitlab.com/AutumnMeowMeow/jexer)
 >> #### Java (>=8)
->> #### ![ptypipe](https://gitlab.com/AutumnMeowMeow/ptypipe)
+>> #### [ptypipe](https://gitlab.com/AutumnMeowMeow/ptypipe)
 
 # Screenshot
 ![image](https://github.com/hexaredecimal/JVision/assets/51314855/fa09937f-1efa-44cb-a8c0-4ad1f8e70fbd)
