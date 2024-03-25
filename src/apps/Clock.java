@@ -5,15 +5,13 @@
 package apps;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import jexer.TApplication;
 import jexer.TLabel;
 import jexer.TPanel;
 import jexer.TWindow;
-import jexer.bits.ColorTheme;
 import jexer.menu.TMenu;
 import jvision.Helpers;
+import jvision.SystemEvent;
 
 /**
  *
@@ -21,9 +19,10 @@ import jvision.Helpers;
  */
 public class Clock extends TWindow {
 	private TLabel clock_label; 
-	private TPanel main_panel;
-	private ArrayList<TMenu> menus;
-	private TApplication parent; 
+	private final TPanel main_panel;
+	private final ArrayList<TMenu> menus;
+	private final TApplication parent; 
+
 	public Clock(TApplication application, String title, int width, int height) {
 		super(application, title, width, height);
 		setResizable(false);
@@ -34,6 +33,7 @@ public class Clock extends TWindow {
 		addMenus();
 	}
 
+	@Override
 	public void onIdle() {
 		clock_label.remove();
 		clock_label = main_panel.addLabel(Helpers.getTime(), main_panel.getWidth() / 4, main_panel.getHeight() / 4); 
@@ -57,13 +57,12 @@ public class Clock extends TWindow {
 		TMenu app = parent.addMenu("Cloc&k");
 		app.addItem(0x25500A, "A&bout");
 		app.addSeparator();
-		app.addItem(0x33111, "Exit");
+		app.addItem(SystemEvent.CloseApp.getId(), "E&xit");
 		return app;
 	}
 	
 	@Override
 	public void onFocus() {
-		System.out.println("apps.Picem.onFocus()");
 		if (parent != null) {
 			Helpers.addMenus(parent, menus);
 		}
@@ -71,7 +70,6 @@ public class Clock extends TWindow {
 
 	@Override
 	public void onUnfocus() {
-		System.out.println("apps.Picem.onUnfocus()");
 		if (parent != null) {
 			Helpers.removeMenus(parent, menus);
 		}

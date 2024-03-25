@@ -17,10 +17,10 @@ import jvision.SystemEvent;
  */
 public class Picem extends TImageWindow {
 
-	private TApplication parent;
-	private ArrayList<TMenu> menus;
+	private final TApplication parent;
+	private final ArrayList<TMenu> menus;
 
-	private String workingDir;
+	private final String workingDir;
 	public Picem(TApplication parent, File file) throws IOException {
 		super(parent, file);
 		this.parent = parent;
@@ -30,6 +30,8 @@ public class Picem extends TImageWindow {
 		setHeight(50);
 		workingDir = Helpers.extractPath(file.getAbsolutePath());
 	}
+
+	public String getWorkingDir() { return workingDir; }
 
 	private void addMenus() {
 		menus.add(getAppMenu());
@@ -51,13 +53,12 @@ public class Picem extends TImageWindow {
 		TMenu app = parent.addMenu("Pi&cem");
 		app.addItem(0x25500A, "A&bout");
 		app.addSeparator();
-		app.addItem(0x33111, "Exit");
+		app.addItem(SystemEvent.CloseApp.getId(), "E&xit");
 		return app;
 	}
 	
 	@Override
 	public void onFocus() {
-		System.out.println("apps.Picem.onFocus()");
 		if (parent != null) {
 			Helpers.addMenus(parent, menus);
 		}
@@ -65,7 +66,6 @@ public class Picem extends TImageWindow {
 
 	@Override
 	public void onUnfocus() {
-		System.out.println("apps.Picem.onUnfocus()");
 		if (parent != null) {
 			Helpers.removeMenus(parent, menus);
 		}

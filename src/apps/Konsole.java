@@ -12,15 +12,17 @@ import jexer.TWindow;
 import jexer.event.TResizeEvent;
 import jexer.menu.TMenu;
 import jvision.Helpers;
+import jvision.SystemEvent;
 
 /**
  *
  * @author hexaredecimal
  */
 public class Konsole extends TWindow {
-	private TTerminalWidget terminal;
-	private ArrayList<TMenu> menus;
-	private TApplication parent;
+	private final TTerminalWidget terminal;
+	private final ArrayList<TMenu> menus;
+	private final TApplication parent;
+
 	public Konsole(TApplication application, String title, int width, int height) {
 		super(application, title, width, height);
 		this.parent = application;
@@ -62,13 +64,12 @@ public class Konsole extends TWindow {
 		TMenu app = parent.addMenu("K&onsole");
 		app.addItem(0x25500A, "A&bout");
 		app.addSeparator();
-		app.addItem(0x33111, "Exit");
+		app.addItem(SystemEvent.CloseApp.getId(), "E&xit");
 		return app;
 	}
 	
 	@Override
 	public void onFocus() {
-		System.out.println("apps.Picem.onFocus()");
 		if (parent != null) {
 			Helpers.addMenus(parent, menus);
 		}
@@ -76,7 +77,6 @@ public class Konsole extends TWindow {
 
 	@Override
 	public void onUnfocus() {
-		System.out.println("apps.Picem.onUnfocus()");
 		if (parent != null) {
 			Helpers.removeMenus(parent, menus);
 		}

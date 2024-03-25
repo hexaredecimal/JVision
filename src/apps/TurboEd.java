@@ -13,6 +13,7 @@ import jexer.TEditorWindow;
 import jexer.TWindow;
 import jexer.menu.TMenu;
 import jvision.Helpers;
+import jvision.SystemEvent;
 
 /**
  *
@@ -23,8 +24,9 @@ public class TurboEd extends TEditorWindow {
 	private static final int WIDTH = 100; 
 	private static final int HEIGHT = 50; 
 
-	private TApplication parent;
-	private ArrayList<TMenu> menus; 
+	private final TApplication parent;
+	private final ArrayList<TMenu> menus; 
+
 	public TurboEd(TApplication parent ){
 		super(parent, "TurboEd - New document");
 		this.parent = parent; 
@@ -44,20 +46,18 @@ public class TurboEd extends TEditorWindow {
 		TMenu app = parent.addMenu("&Turbo");
 		app.addItem(0x25500A, "A&bout");
 		app.addSeparator();
-		app.addItem(0x33111, "Exit");
+		app.addItem(SystemEvent.CloseApp.getId(), "E&xit");
 		return app;
 	}
 
 	@Override
 	public void onFocus() {
-		System.out.println("apps.TurboEd.onFocus()");
 		if (parent != null)
 			Helpers.addMenus(parent, menus);
 	}
 
 	@Override
 	public void onUnfocus() {
-		System.out.println("apps.TurboEd.onUnfocus()");
 		if (parent != null)
 			Helpers.removeMenus(parent, menus);
 	}
