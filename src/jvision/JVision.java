@@ -1,6 +1,5 @@
 package jvision;
 
-
 import apps.Clock;
 import apps.DeskTopWindow;
 import apps.Konsole;
@@ -23,12 +22,14 @@ import jexer.menu.TMenu;
 import jexer.menu.TSubMenu;
 
 public class JVision extends TApplication {
+
 	private static final ResourceBundle i18n = ResourceBundle.getBundle(TApplication.class.getName());
 	final static int WIDTH = 200;
 	final static int HEIGHT = 80;
 	final static int FONT_SIZE = 12;
 
-	private final ArrayList<TMenu> root ;
+	private final ArrayList<TMenu> root;
+
 	public static void main(String[] args) throws Exception {
 		System.setProperty("jexer.TTerminal.ptypipe", "true");
 		System.setProperty("jexer.hideStatusBar", "true");
@@ -40,7 +41,6 @@ public class JVision extends TApplication {
 			System.out.println("jvision.JVision.main()");
 		});
 	}
-
 
 	/**
 	 * Public constructor chooses the ECMA-48 / Xterm backend.
@@ -60,14 +60,16 @@ public class JVision extends TApplication {
 
 		// The stock tool menu has items for redrawing the screen, opening
 		// images, and (when using the Swing backend) setting the font.
-		// addToolMenu();
-		URL wall_paper = this.getClass().getResource("/wallpapers/default.jpg");
-		DeskTopWindow win = new DeskTopWindow(this, new File(wall_paper.getPath()), WIDTH, HEIGHT);
-		
-		win.setActive(false);
-		win.setEnabled(false);
-		win.setTitle("");
-
+		// addToolMenu()
+		try {
+			URL wall_paper = this.getClass().getResource("/wallpapers/default.jpg");
+			DeskTopWindow win = new DeskTopWindow(this, new File(wall_paper.getPath()), WIDTH, HEIGHT);
+			win.setActive(false);
+			win.setEnabled(false);
+			win.setTitle("");
+		} catch (Exception e) {
+			new TExceptionDialog(this, e);
+		}
 		// We will have one menu containing a mix of new and stock commands
 		TMenu tileMenu = addMenu(i18n.getString("toolMenuTitle"));
 		TMenu windowMenu = addWindowMenu();
@@ -118,16 +120,15 @@ public class JVision extends TApplication {
 
 		// TODO: Fix this mess of code. Load classes on runtime, maybe?
 		//	 Definetely should try
-
 		int event_id = event.getId();
-		
+
 		if (event_id == SystemEvent.CloseApp.getId()) {
 			active.close();
 		} else if (event_id == SystemEvent.OpenTerminal.getId()) {
 			new Konsole(this, "Konsole", 80, 40);
-		}else if (event_id == SystemEvent.OpenClockem.getId()) {
-			new Clock(this,"Clockem", 20, 5);
-		}else if (event_id == SystemEvent.OpenAboutDialog.getId()) {
+		} else if (event_id == SystemEvent.OpenClockem.getId()) {
+			new Clock(this, "Clockem", 20, 5);
+		} else if (event_id == SystemEvent.OpenAboutDialog.getId()) {
 			this.messageBox("About", "TurboVision OS v0.1");
 		} else if (event_id == SystemEvent.OpenTurboEd.getId()) {
 			TurboEd ed = new TurboEd(this);
