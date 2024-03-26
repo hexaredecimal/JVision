@@ -10,6 +10,7 @@ import jexer.TFileOpenBox;
 import jexer.TImageWindow;
 import jexer.TWindow;
 import jexer.event.TMenuEvent;
+import jexer.event.TResizeEvent;
 import jexer.menu.TMenu;
 import jvision.Helpers;
 import jvision.SystemEvent;
@@ -31,6 +32,9 @@ public class Picem extends TImageWindow {
 		setWidth(100);
 		setHeight(50);
 		workingDir = Helpers.extractPath(file.getAbsolutePath());
+		TResizeEvent editSize = new TResizeEvent(parent.getBackend(),
+			TResizeEvent.Type.WIDGET, 100, 50);
+		onResize(editSize);
 	}
 
 	public String getWorkingDir() { return workingDir; }
