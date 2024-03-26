@@ -4,16 +4,26 @@
  */
 package apps;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jexer.TApplication;
+import jexer.TDesktop;
 import jexer.TEditorWidget;
 import jexer.TExceptionDialog;
 import jexer.TWindow;
 import jexer.event.TMenuEvent;
+import jexer.event.TResizeEvent;
 import jexer.menu.TMenu;
+import jexer.ttree.TDirectoryTreeItem;
+import jexer.ttree.TTreeView;
+import jexer.ttree.TTreeViewWidget;
+import jexer.ttree.TTreeViewWindow;
 import jvision.Helpers;
 import jvision.SystemEvent;
 import libvision.TVEditorWindow;
+import libvision.TVTerminalWindow;
 
 /**
  *
@@ -21,26 +31,92 @@ import libvision.TVEditorWindow;
  */
 public class TurboEd extends TVEditorWindow {
 
-	private static final int WIDTH = 100; 
-	private static final int HEIGHT = 50; 
+	private static final int WIDTH = 100;
+	private static final int HEIGHT = 50;
 
 	private final TApplication parent;
-	private final ArrayList<TMenu> menus; 
+	private final ArrayList<TMenu> menus;
 
-	public TurboEd(TApplication parent ){
+	private TWindow files;
+	private TVTerminalWindow runner;
+
+	public TurboEd(TApplication parent) {
 		super(parent, "TurboEd - New document");
-		this.parent = parent; 
+		this.parent = parent;
 		this.menus = new ArrayList<>();
 		addMenus();
 		setWidth(WIDTH);
 		setHeight(HEIGHT);
-		TEditorWidget editor = getEditor(); 
+		TDesktop desktop = parent.getDesktop();
+		int sceen_w = desktop.getWidth();
+		int sceen_h = desktop.getHeight();
+
+		int turbo_x = (int) ((double) sceen_w * 35 / 100);
+		int turbo_y = (int) ((double) sceen_h * 10 / 100);
+		setX(turbo_x);
+		setY(turbo_y);
+
+		TEditorWidget editor = getEditor();
 		editor.setText("Hello, world");
+
+		createFileTree(".");
+		createRunner("echo 'Hello, world!!! in the terminal'");
 	}
+
+	private void createRunner(String command) {
+		TDesktop desktop = parent.getDesktop();
+		int sceen_w = desktop.getWidth();
+		int sceen_h = desktop.getHeight();
+		
+		int runner_w = (int) ((double) sceen_w * 80 / 100);
+		int files_x = files.getX();
+		if (runner != null)
+			runner.close();
+		runner = new TVTerminalWindow(parent, files_x, 0, command);
+		runner.setWidth(runner_w);
+		runner.setHeight(10);
+		int runner_y = (int) ((double) sceen_h * 75 / 100);
+		runner.setX(files_x);
+		runner.setY(runner_y);
+
+		TResizeEvent editSize = new TResizeEvent(parent.getBackend(),
+			TResizeEvent.Type.WIDGET, runner_w, 10);
+		runner.onResize(editSize);
+	}
+
+	
+	private void createFileTree(String path) {
+		TDesktop desktop = parent.getDesktop();
+		int sceen_w = desktop.getWidth();
+		int sceen_h = desktop.getHeight();
+
+		int turbo_y = (int) ((double) sceen_h * 10 / 100);
+		if (files != null)
+			files.close();
+		files = parent.addWindow("File Tree", 0, 0, 50, HEIGHT, 0);
+		int files_x = (int) ((double) sceen_w * 5 / 100);
+		files.setX(files_x);
+		files.setY(turbo_y);
+
+		TTreeViewWidget treeView = files.addTreeViewWidget(0, 0, (int)((double)files.getWidth() / 2) - 2, files.getHeight() - 2);
+		try {
+			new TDirectoryTreeItem(treeView, path, true);
+			files.addDirectoryList(
+				path, 
+				(int)((double)files.getWidth() / 2), 
+				0, 
+				(int)((double)files.getWidth() / 2), 
+				files.getHeight() - 2
+			);
+		} catch (Exception ex) {
+			new TExceptionDialog(parent, ex);
+		}
+	}
+
 
 	private void addMenus() {
 		Helpers.addNonExist(menus, getAppMenu());
-		Helpers.addNonExist(menus, parent.addFileMenu());
+		Helpers.addNonExist(menus, getFile());
 		Helpers.addNonExist(menus, parent.addEditMenu());
 	}
 
@@ -52,6 +128,19 @@ public class TurboEd extends TVEditorWindow {
 		return app;
 	}
 
+	private TMenu getFile() {
+		TMenu fileMenu = parent.addMenu("F&ile");
+		fileMenu.addItem(0x10111, "New f&ile");
+		fileMenu.addItem(0x11011, "N&ew project");
+		fileMenu.addSeparator();
+		fileMenu.addItem(0x11101, "Op&en file");
+		fileMenu.addItem(0x11110, "Op&en project");
+		fileMenu.addSubMenu("R&ecent");
+		fileMenu.addSeparator();
+		fileMenu.addItem(0x12111, "S&ave");
+		fileMenu.addItem(0x11211, "Save a&ll");
+		return fileMenu;
+	}
 
 	@Override
 	public void onMenu(TMenuEvent event) {
@@ -62,21 +151,25 @@ public class TurboEd extends TVEditorWindow {
 			Helpers.showAboutMessage(parent, "TurboEd");
 		}
 	}
-	
+
 	@Override
 	public void onFocus() {
-		if (parent != null)
+		if (parent != null) {
 			Helpers.addMenus(parent, menus);
+		}
 	}
 
 	@Override
 	public void onUnfocus() {
-		if (parent != null)
+		if (parent != null) {
 			Helpers.removeMenus(parent, menus);
+		}
 	}
 
-	@Override 
+	@Override
 	public void onClose() {
+		runner.close();
+		files.close();
 		this.onUnfocus();
 		super.onClose();
 	}
