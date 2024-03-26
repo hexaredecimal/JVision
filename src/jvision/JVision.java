@@ -1,5 +1,6 @@
 package jvision;
 
+import apps.Callizy;
 import apps.Clock;
 import apps.DeskTopWindow;
 import apps.Konsole;
@@ -13,6 +14,7 @@ import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import jexer.TApplication;
 import jexer.TDesktop;
+import jexer.TEditColorThemeWindow;
 import jexer.TExceptionDialog;
 import jexer.TTerminalWidget;
 import jexer.TSplitPane;
@@ -86,10 +88,15 @@ public class JVision extends TApplication {
 		tileMenu.addItem(SystemEvent.OpenClockem.getId(), "Clock&em");
 
 		tileMenu.addSeparator();
+		TSubMenu utils =  tileMenu.addSubMenu("Ut&ils"); 
+		utils.addItem(0x23110, "Ca&lender");
+		
+		tileMenu.addSeparator();
 		TSubMenu sub = tileMenu.addSubMenu("Se&ttings");
 		TSubMenu screen_set = sub.addSubMenu("De&sktop");
 		screen_set.addDefaultItem(TMenu.MID_REPAINT);
 		sub.addDefaultItem(TMenu.MID_SCREEN_OPTIONS);
+		sub.addItem(0x01121, "T&heme");
 
 		tileMenu.addSeparator();
 		tileMenu.addItem(SystemEvent.OpenAboutDialog.getId(), "&About");
@@ -131,7 +138,11 @@ public class JVision extends TApplication {
 		//	 Definetely should try
 		int event_id = event.getId();
 
-		if (event_id == SystemEvent.CloseApp.getId()) {
+		if (event_id == 0x23110) {
+			new Callizy(this);
+		} else if (event_id == 0x01121) {
+			new TEditColorThemeWindow(this);
+		} else if (event_id == SystemEvent.CloseApp.getId()) {
 			active.close();
 		} else if (event_id == SystemEvent.OpenTerminal.getId()) {
 			new Konsole(this, "Konsole", 80, 40);
