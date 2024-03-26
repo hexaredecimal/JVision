@@ -8,6 +8,8 @@ import jexer.TApplication;
 import jexer.TExceptionDialog;
 import jexer.TFileOpenBox;
 import jexer.TImageWindow;
+import jexer.TWindow;
+import jexer.event.TMenuEvent;
 import jexer.menu.TMenu;
 import jvision.Helpers;
 import jvision.SystemEvent;
@@ -58,6 +60,17 @@ public class Picem extends TImageWindow {
 	}
 	
 	@Override
+	public void onMenu(TMenuEvent event) {
+		TWindow active = parent.getActiveWindow();
+		int event_id = event.getId();
+
+		if (event_id == 0x25500A) {
+			Helpers.showAboutMessage(parent, "Picem Image Viewer");
+		}
+	}
+
+	
+	@Override
 	public void onFocus() {
 		if (parent != null) {
 			Helpers.addMenus(parent, menus);
@@ -76,6 +89,7 @@ public class Picem extends TImageWindow {
 		this.onUnfocus();
 		super.onClose();
 	}
+
 
 
 	public static String readFile(TApplication parent) {

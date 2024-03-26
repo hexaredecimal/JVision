@@ -9,6 +9,7 @@ import jexer.TApplication;
 import jexer.TLabel;
 import jexer.TPanel;
 import jexer.TWindow;
+import jexer.event.TMenuEvent;
 import jexer.menu.TMenu;
 import jvision.Helpers;
 import jvision.SystemEvent;
@@ -59,6 +60,16 @@ public class Clock extends TWindow {
 		app.addSeparator();
 		app.addItem(SystemEvent.CloseApp.getId(), "E&xit");
 		return app;
+	}
+	
+	@Override
+	public void onMenu(TMenuEvent event) {
+		TWindow active = parent.getActiveWindow();
+		int event_id = event.getId();
+
+		if (event_id == 0x25500A) {
+			Helpers.showAboutMessage(parent, "Clockem");
+		}
 	}
 	
 	@Override

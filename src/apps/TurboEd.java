@@ -7,6 +7,9 @@ package apps;
 import java.util.ArrayList;
 import jexer.TApplication;
 import jexer.TEditorWidget;
+import jexer.TExceptionDialog;
+import jexer.TWindow;
+import jexer.event.TMenuEvent;
 import jexer.menu.TMenu;
 import jvision.Helpers;
 import jvision.SystemEvent;
@@ -49,6 +52,17 @@ public class TurboEd extends TVEditorWindow {
 		return app;
 	}
 
+
+	@Override
+	public void onMenu(TMenuEvent event) {
+		TWindow active = parent.getActiveWindow();
+		int event_id = event.getId();
+
+		if (event_id == 0x25500A) {
+			Helpers.showAboutMessage(parent, "TurboEd");
+		}
+	}
+	
 	@Override
 	public void onFocus() {
 		if (parent != null)

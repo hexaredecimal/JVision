@@ -7,46 +7,31 @@ package apps;
 import java.util.ArrayList;
 import jexer.TAction;
 import jexer.TApplication;
+import jexer.TExceptionDialog;
 import jexer.TTerminalWidget;
 import jexer.TWindow;
+import jexer.event.TMenuEvent;
 import jexer.event.TResizeEvent;
 import jexer.menu.TMenu;
 import jvision.Helpers;
 import jvision.SystemEvent;
+import libvision.TVTerminalWindow;
 
 /**
  *
  * @author hexaredecimal
  */
-public class Konsole extends TWindow {
-	private final TTerminalWidget terminal;
+public class Konsole extends TVTerminalWindow {
 	private final ArrayList<TMenu> menus;
 	private final TApplication parent;
 
 	public Konsole(TApplication application, String title, int width, int height) {
-		super(application, title, width, height);
+		super(application, application.getDesktop().getWidth() / 2, 20, "zsh");
 		this.parent = application;
-		terminal = new TTerminalWidget(this, 0, 0, width, height,
-			new TAction() {
-			public void DO() {
-				// This action will be executed when the shell process exits.
-			}
-		});
-		terminal.setWidth(width);
-		terminal.setHeight(height);
 		this.menus = new ArrayList<>();
 		addMenus();
 	}
 
-	@Override
-	public void onResize(TResizeEvent event) {
-		int width = event.getWidth();
-		int height = event.getHeight(); 
-		this.setWidth(width);
-		this.setHeight(height);
-		terminal.setWidth(width);
-		terminal.setHeight(height);
-	}
 
 	private void addMenus() {
 		menus.add(getAppMenu());
@@ -75,6 +60,17 @@ public class Konsole extends TWindow {
 		}
 	}
 
+	@Override
+	public void onMenu(TMenuEvent event) {
+		TWindow active = parent.getActiveWindow();
+		int event_id = event.getId();
+
+		if (event_id == 0x0A111) {
+			new TExceptionDialog(parent, new Exception("Opacity event: We got it o lock!!"));
+		} else if (event_id == 0x25500A) {
+			Helpers.showAboutMessage(parent, "Konsole Terminal");
+		}
+	}
 	@Override
 	public void onUnfocus() {
 		if (parent != null) {
