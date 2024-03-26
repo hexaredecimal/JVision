@@ -15,6 +15,7 @@ import jexer.menu.TMenu;
  * @author hexaredecimal
  */
 public class Helpers {
+	private static final String version = "0.0.1";
 	public static void removeMenus(TApplication app, ArrayList<TMenu> menus){
 		if (app == null || menus == null)
 			return; 
@@ -67,5 +68,9 @@ public class Helpers {
 	public static void addNonExist(ArrayList<TMenu> t, TMenu a) {
 		if (!t.contains(a))
 			t.add(a);
+	}
+
+	public static void showAboutMessage(TApplication app, String message) {
+		app.messageBox("About", message + " - v" + Helpers.version); 
 	}
 }
