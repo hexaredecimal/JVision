@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javax.swing.JFrame;
 import jexer.TApplication;
 import jexer.TDesktop;
 import jexer.TExceptionDialog;
@@ -19,6 +20,7 @@ import jexer.TWidget;
 import jexer.TWindow;
 import jexer.event.TMenuEvent;
 import jexer.menu.TMenu;
+import jexer.menu.TMenuItem;
 import jexer.menu.TSubMenu;
 
 public class JVision extends TApplication {
@@ -50,8 +52,8 @@ public class JVision extends TApplication {
 	public JVision() throws Exception {
 
 		super(BackendType.SWING, WIDTH, HEIGHT, FONT_SIZE);
-
 		root = new ArrayList<>();
+
 		//getTheme().setFemme();
 		System.setProperty("jexer.TWindow.borderStyleForeground", "round");
 		System.setProperty("jexer.TWindow.borderStyleModal", "round");
@@ -70,13 +72,15 @@ public class JVision extends TApplication {
 		} catch (Exception e) {
 			new TExceptionDialog(this, e);
 		}
+
+
 		// We will have one menu containing a mix of new and stock commands
 		TMenu tileMenu = addMenu(i18n.getString("toolMenuTitle"));
 		TMenu windowMenu = addWindowMenu();
 
 		// Stock commands: a new shell with resizable window, and exit
 		// program.
-		tileMenu.addItem(SystemEvent.OpenTerminal.getId(), "T&erminal");
+		tileMenu.addItem(SystemEvent.OpenTerminal.getId(), "Ko&nsole");
 		tileMenu.addItem(SystemEvent.OpenPicem.getId(), "Pic&em");
 		tileMenu.addItem(SystemEvent.OpenTurboEd.getId(), "Turbo&Ed");
 		tileMenu.addItem(SystemEvent.OpenClockem.getId(), "Clock&em");
@@ -118,6 +122,11 @@ public class JVision extends TApplication {
 		TWindow active = this.getActiveWindow();
 		TSplitPane split = null;
 
+		super.onMenu(event);
+		TMenuItem item = this.getMenuItem(event.getId());
+		if (active != null) {
+			active.onMenu(event);
+		}
 		// TODO: Fix this mess of code. Load classes on runtime, maybe?
 		//	 Definetely should try
 		int event_id = event.getId();
@@ -157,7 +166,6 @@ public class JVision extends TApplication {
 				TExceptionDialog e = new TExceptionDialog(this, ex);
 			}
 		} else {
-			super.onMenu(event);
 		}
 
 		return true;
