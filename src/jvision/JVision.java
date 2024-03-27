@@ -3,6 +3,7 @@ package jvision;
 import apps.Callizy;
 import apps.Clock;
 import apps.DeskTopWindow;
+import apps.Fileman;
 import apps.Konsole;
 import apps.Picem;
 import apps.TurboEd;
@@ -10,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import jexer.TApplication;
@@ -75,7 +77,6 @@ public class JVision extends TApplication {
 			new TExceptionDialog(this, e);
 		}
 
-
 		// We will have one menu containing a mix of new and stock commands
 		TMenu tileMenu = addMenu(i18n.getString("toolMenuTitle"));
 		TMenu windowMenu = addWindowMenu();
@@ -88,9 +89,10 @@ public class JVision extends TApplication {
 		tileMenu.addItem(SystemEvent.OpenClockem.getId(), "Clock&em");
 
 		tileMenu.addSeparator();
-		TSubMenu utils =  tileMenu.addSubMenu("Ut&ils"); 
+		TSubMenu utils = tileMenu.addSubMenu("Ut&ils");
 		utils.addItem(0x23110, "Ca&lender");
-		
+		utils.addItem(0xbad2c, "F&ile man");
+
 		tileMenu.addSeparator();
 		TSubMenu sub = tileMenu.addSubMenu("Se&ttings");
 		TSubMenu screen_set = sub.addSubMenu("De&sktop");
@@ -138,7 +140,11 @@ public class JVision extends TApplication {
 		//	 Definetely should try
 		int event_id = event.getId();
 
-		if (event_id == 0x23110) {
+		if (event_id == 0xbad2c) {
+			List<String> filters = new ArrayList<String>();
+			filters.add("^.*$");
+			new Fileman(this, ".", filters);
+		} else if (event_id == 0x23110) {
 			new Callizy(this);
 		} else if (event_id == 0x01121) {
 			new TEditColorThemeWindow(this);
