@@ -4,14 +4,18 @@
  */
 package apps;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jexer.TApplication;
 import jexer.TDesktop;
 import jexer.TEditorWidget;
 import jexer.TExceptionDialog;
+import jexer.TFileOpenBox;
 import jexer.TWindow;
 import jexer.event.TMenuEvent;
 import jexer.event.TResizeEvent;
@@ -57,10 +61,9 @@ public class TurboEd extends TVEditorWindow {
 		setY(turbo_y);
 
 		TEditorWidget editor = getEditor();
-		editor.setText("Hello, world");
 
-		createFileTree(".");
-		createRunner("echo 'Hello, world!!! in the terminal'");
+		// createFileTree(".");
+		// createRunner("echo 'Hello, world!!! in the terminal'");
 	}
 
 	private void createRunner(String command) {
@@ -146,9 +149,45 @@ public class TurboEd extends TVEditorWindow {
 	public void onMenu(TMenuEvent event) {
 		TWindow active = parent.getActiveWindow();
 		int event_id = event.getId();
+		super.onMenu(event);
+		
+		if (event_id == 0x11101) {
+			try {
+				String filename = fileOpenBox(".", TFileOpenBox.Type.OPEN);
+				if (filename == null)
+					return;
+				Scanner sc = new Scanner(new File(filename));
+				String contents = "";
+				while (sc.hasNextLine())
+					contents += sc.nextLine() + "\n" ;
 
-		if (event_id == 0x25500A) {
+				sc.close();
+				getEditor().setText(contents);
+			} catch (IOException ex) {
+				Logger.getLogger(TurboEd.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		} else if (event_id == 0x25500A) {
 			Helpers.showAboutMessage(parent, "TurboEd");
+		} else if(event_id == 0x012111) {
+			TEditorWidget editor = getEditor(); 
+			if (!editor.isDirty())
+				return; 
+			try {
+				String filename = fileOpenBox(".", TFileOpenBox.Type.SAVE);
+				if (filename == null)
+					return;
+
+				File fp = new File(filename); 
+				if (!fp.exists())
+					fp.createNewFile();
+
+				FileWriter fw = new FileWriter(fp); 
+				fw.write(editor.getText());
+				fw.close();
+				editor.setText(editor.getText());
+			} catch (IOException ex) {
+				Logger.getLogger(TurboEd.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 
@@ -168,8 +207,11 @@ public class TurboEd extends TVEditorWindow {
 
 	@Override
 	public void onClose() {
-		runner.close();
-		files.close();
+		if (runner != null)
+			runner.close();
+
+		if (files != null)
+			files.close();
 		this.onUnfocus();
 		super.onClose();
 	}
