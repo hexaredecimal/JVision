@@ -348,6 +348,7 @@ public class Fileman extends TWindow {
 			String contents = ""; 
 			while (sc.hasNextLine())
 				contents += sc.nextLine() + "\n"; 
+			sc.close();
 
 			if (editor != null) {
 				getChildren().remove(editor); 
