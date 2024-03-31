@@ -13,7 +13,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.JFrame;
 import jexer.TApplication;
 import jexer.TDesktop;
 import jexer.TEditColorThemeWindow;
@@ -63,7 +62,7 @@ public class JVision extends TApplication {
 		System.setProperty("jexer.TWindow.borderStyleModal", "round");
 		System.setProperty("jexer.TWindow.borderStyleMoving", "round");
 		System.setProperty("jexer.TWindow.borderStyleInactive", "round");
-
+		
 		// The stock tool menu has items for redrawing the screen, opening
 		// images, and (when using the Swing backend) setting the font.
 		// addToolMenu()
@@ -129,7 +128,6 @@ public class JVision extends TApplication {
 	@Override
 	protected boolean onMenu(TMenuEvent event) {
 		TWindow active = this.getActiveWindow();
-		TSplitPane split = null;
 
 		super.onMenu(event);
 		TMenuItem item = this.getMenuItem(event.getId());
