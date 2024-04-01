@@ -31,38 +31,16 @@ import jvision.Helpers;
 import jvision.SystemEvent;
 
 public class Fileman extends TWindow {
-
-	/**
-	 * The left-side tree view pane.
-	 */
 	private TTreeViewWidget treeView;
-
-	/**
-	 * The data behind treeView.
-	 */
 	private TDirectoryTreeItem treeViewRoot;
 
-	/**
-	 * The top-right-side directory list pane.
-	 */
 	private TDirectoryList directoryList;
 	private TEditorWidget editor;
 	private final ArrayList<TMenu> menus;
 
-	/**
-	 * The bottom-right-side image pane.
-	 */
 	private TImage imageWidget;
-	private TApplication parent; 
-	/**
-	 * Public constructor.
-	 *
-	 * @param application the TApplication that manages this window
-	 * @param path path of selected file
-	 * @param filters a list of strings that files must match to be
-	 * displayed
-	 * @throws IOException of a java.io operation throws
-	 */
+	private TApplication parent;
+
 	public Fileman(final TApplication application, final String path,
 		final List<String> filters) {
 		
@@ -72,7 +50,6 @@ public class Fileman extends TWindow {
 		menus = new ArrayList<>();
 		addMenus();
 
-		// Add directory treeView
 		treeView = addTreeViewWidget(0, 0, getWidth() / 2, getHeight(),
 			new TAction() {
 			public void DO() {
@@ -110,7 +87,6 @@ public class Fileman extends TWindow {
 			new TExceptionDialog(application, ex);
 		}
 
-		// Add directory files list
 		directoryList = addDirectoryList(path, getWidth() / 2 + 1, 0,
 			getWidth() / 2 - 1, getHeight() / 2,
 			new TAction() {
@@ -180,18 +156,10 @@ public class Fileman extends TWindow {
 		super.onClose();
 	}
 
-
-
 	
-	/**
-	 * Handle window/screen resize events.
-	 *
-	 * @param event resize event
-	 */
 	@Override
 	public void onResize(final TResizeEvent event) {
 
-		// Resize the tree and list
 		treeView.setY(1);
 		treeView.setWidth(getWidth() / 2);
 		treeView.setHeight(getHeight() - 1);
@@ -212,7 +180,6 @@ public class Fileman extends TWindow {
 			directoryList.getWidth(),
 			directoryList.getHeight()));
 
-		// Recreate the image
 		if (imageWidget != null) {
 			getChildren().remove(imageWidget);
 		}
@@ -231,11 +198,6 @@ public class Fileman extends TWindow {
 		}
 	}
 
-	/**
-	 * Handle keystrokes.
-	 *
-	 * @param keypress keystroke event
-	 */
 	@Override
 	public void onKeypress(final TKeypressEvent keypress) {
 
@@ -247,10 +209,8 @@ public class Fileman extends TWindow {
 				|| (keypress.equals(kbPgDn))
 				|| (keypress.equals(kbHome))
 				|| (keypress.equals(kbEnd))) {
-				// Tree view will be changing, update the directory list.
 				super.onKeypress(keypress);
 
-				// This is the same action as treeView's enter.
 				TTreeItem item = treeView.getSelected();
 				File selectedDir = ((TDirectoryTreeItem) item).getFile();
 				try {
@@ -273,8 +233,6 @@ public class Fileman extends TWindow {
 						activate(treeView);
 					}
 				} catch (IOException e) {
-					// If the backend is Swing, we can emit the stack trace
-					// to stderr.  Otherwise, just squash it.
 					if (getScreen() instanceof SwingTerminal) {
 						e.printStackTrace();
 					}
@@ -283,15 +241,9 @@ public class Fileman extends TWindow {
 			}
 		}
 
-		// Pass to my parent
 		super.onKeypress(keypress);
 	}
 
-	/**
-	 * Set the image thumbnail.
-	 *
-	 * @param file the image file
-	 */
 	private void setThumbnail(final File file) {
 		if (file == null) {
 			return;
@@ -315,8 +267,6 @@ public class Fileman extends TWindow {
 			try {
 				image = ImageIO.read(file);
 			} catch (IOException e) {
-				// If the backend is Swing, we can emit the stack trace to
-				// stderr.  Otherwise, just squash it.
 				if (getScreen() instanceof SwingTerminal) {
 					e.printStackTrace();
 				}
@@ -332,7 +282,6 @@ public class Fileman extends TWindow {
 			imageWidget = new TImage(this, getWidth() - width,
 				getHeight() - height, width, height, image, 0, 0, null);
 
-			// Resize the image to fit within the pane.
 			imageWidget.setScaleType(TImage.Scale.SCALE);
 
 			imageWidget.setActive(false);

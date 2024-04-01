@@ -14,16 +14,13 @@ import jexer.event.TResizeEvent;
 import jexer.menu.TMenu;
 import jvision.Helpers;
 import jvision.SystemEvent;
-/**
- *
- * @author hexaredecimal
- */
-public class Picem extends TImageWindow {
 
+
+public class Picem extends TImageWindow {
 	private final TApplication parent;
 	private final ArrayList<TMenu> menus;
-
 	private final String workingDir;
+	
 	public Picem(TApplication parent, File file) throws IOException {
 		super(parent, file);
 		this.parent = parent;

@@ -1,17 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package apps;
 
 import java.util.ArrayList;
-import jexer.TAction;
 import jexer.TApplication;
 import jexer.TExceptionDialog;
-import jexer.TTerminalWidget;
 import jexer.TWindow;
 import jexer.event.TMenuEvent;
-import jexer.event.TResizeEvent;
 import jexer.menu.TMenu;
 import jvision.Helpers;
 import jvision.SystemEvent;

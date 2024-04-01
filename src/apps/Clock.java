@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package apps;
 
 import java.util.ArrayList;
@@ -15,7 +11,6 @@ import jvision.Helpers;
 import jvision.SystemEvent;
 
 /**
- *
  * @author hexaredecimal
  */
 public class Clock extends TWindow {

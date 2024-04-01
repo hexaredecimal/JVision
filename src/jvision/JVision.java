@@ -18,7 +18,6 @@ import jexer.TDesktop;
 import jexer.TEditColorThemeWindow;
 import jexer.TExceptionDialog;
 import jexer.TTerminalWidget;
-import jexer.TSplitPane;
 import jexer.TWidget;
 import jexer.TWindow;
 import jexer.event.TMenuEvent;
@@ -47,25 +46,14 @@ public class JVision extends TApplication {
 		});
 	}
 
-	/**
-	 * Public constructor chooses the ECMA-48 / Xterm backend.
-	 *
-	 * @throws java.lang.Exception
-	 */
 	public JVision() throws Exception {
-
 		super(BackendType.SWING, WIDTH, HEIGHT, FONT_SIZE);
 		root = new ArrayList<>();
-
-		//getTheme().setFemme();
 		System.setProperty("jexer.TWindow.borderStyleForeground", "round");
 		System.setProperty("jexer.TWindow.borderStyleModal", "round");
 		System.setProperty("jexer.TWindow.borderStyleMoving", "round");
 		System.setProperty("jexer.TWindow.borderStyleInactive", "round");
 		
-		// The stock tool menu has items for redrawing the screen, opening
-		// images, and (when using the Swing backend) setting the font.
-		// addToolMenu()
 		try {
 			URL wall_paper = this.getClass().getResource("/wallpapers/default.jpg");
 			DeskTopWindow win = new DeskTopWindow(this, new File(wall_paper.getPath()), WIDTH, HEIGHT);
@@ -76,12 +64,9 @@ public class JVision extends TApplication {
 			new TExceptionDialog(this, e);
 		}
 
-		// We will have one menu containing a mix of new and stock commands
 		TMenu tileMenu = addMenu(i18n.getString("toolMenuTitle"));
 		TMenu windowMenu = addWindowMenu();
 
-		// Stock commands: a new shell with resizable window, and exit
-		// program.
 		tileMenu.addItem(SystemEvent.OpenTerminal.getId(), "Ko&nsole");
 		tileMenu.addItem(SystemEvent.OpenPicem.getId(), "Pic&em");
 		tileMenu.addItem(SystemEvent.OpenTurboEd.getId(), "Turbo&Ed");
@@ -105,10 +90,6 @@ public class JVision extends TApplication {
 		root.add(tileMenu);
 		root.add(windowMenu);
 
-		// TTerminalWidget can request the text-block mouse pointer be
-		// suppressed, but the default TDesktop will ignore it.  Let's set a
-		// new TDesktop to pass that mouse pointer visibility option to
-		// TApplication.
 		setDesktop(new TDesktop(this) {
 			@Override
 			public boolean hasHiddenMouse() {
@@ -122,9 +103,6 @@ public class JVision extends TApplication {
 
 	}
 
-	/**
-	 * Process menu events.
-	 */
 	@Override
 	protected boolean onMenu(TMenuEvent event) {
 		TWindow active = this.getActiveWindow();

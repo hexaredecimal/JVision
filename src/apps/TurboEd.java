@@ -69,9 +69,6 @@ public class TurboEd extends TVEditorWindow {
 		setY(turbo_y);
 
 		TEditorWidget editor = getEditor();
-
-		// createFileTree(".");
-		// createRunner("echo 'Hello, world!!! in the terminal'");
 	}
 
 	private void createRunner(String command) {
